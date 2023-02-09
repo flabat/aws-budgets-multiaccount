@@ -1,6 +1,6 @@
 # AWS Budgets Multiaccount
 
-This sample application allows customers using AWS Organizations with multiple liked accounts, to easily create per account AWS Budgets. All Budgets will be created in the Organizations Payer account. The sample alerts are published to a SNS topic created by the application.
+This sample application allows customers using AWS Organizations with multiple linked accounts, to easily create per account AWS Budgets. All Budgets will be created in the Organizations Payer account. The sample alerts are published to a SNS topic created by the application.
 
 ## Getting started
 
@@ -14,7 +14,7 @@ npm install
 
 ## Helper script
 
-The projects includes a bash helper script that creates a ```budgets.json``` with all accounts under the AWS Organization, the average monthly spend of the selected period, and a budget based on an increase factor.
+The project includes a bash helper script that creates a ```budgets.json``` with all accounts under the AWS Organization, the average monthly spend for the selected period, and a budget based on a defined increase factor.
 
 Sample ```budgets.json```
 

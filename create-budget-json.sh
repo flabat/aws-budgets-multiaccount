@@ -10,11 +10,13 @@
 # Get all accounts in the organization
 ACCOUNTS=$(aws organizations list-accounts --query 'Accounts[*].Id' --output text)
 
+echo "Found these accounts: $ACCOUNTS"
+
 # Set the start and end date for the calculation of the average spend
-STARTDATE='2022-03-01'
+STARTDATE='2022-11-01'
 
 # Set the end date to the last day of the current month
-ENDDATE='2022-12-31'
+ENDDATE='2023-01-31'
 
 # Set the budget increase factor (1.5 = 50% increase)
 BUDGETINCREASE=1.5
@@ -25,9 +27,10 @@ echo "[" > budgets.json
 # Loop through all accounts and calculate the average spend for the last X months
 for ACCOUNT in $ACCOUNTS
     do
+        ACCOUNT=${ACCOUNT//[[:blank:]]/}
         TSPEND=0
         MONTHS=0
-
+        echo "Calculating budget for account $ACCOUNT"
         # Get the spend for the last X months
         MSPEND=$(
             aws ce get-cost-and-usage \
@@ -38,15 +41,25 @@ for ACCOUNT in $ACCOUNTS
             --filter "{\"Dimensions\":{\"Key\":\"LINKED_ACCOUNT\",\"Values\":[\"${ACCOUNT}\"]}}" \
             --query "ResultsByTime[*].Groups[*].Metrics.UnblendedCost.Amount" \
             --output text)
-        
+        # echo "Spend for account $ACCOUNT: $MSPEND"
         # Calculate the average spend
         for SPEND in $MSPEND
             do
+                echo "Spend for month $MONTHS: $SPEND"
                 TSPEND=$(echo "$TSPEND + $SPEND" | bc)
                 MONTHS=$((MONTHS+1))  
             done
         TSPEND=${TSPEND%.*}
+        if [ -z "$TSPEND" ]
+            then
+                TSPEND=0
+        fi
+        echo "Total rounded spend for account $ACCOUNT: $TSPEND"
+        echo "Number of months: $MONTHS"
+
         AVGSPEND=$(echo "$TSPEND / $MONTHS" | bc)
+
+        echo "Average spend for account $ACCOUNT: $AVGSPEND"
 
         # Calculate the budget
         BUDGET=$(echo "$AVGSPEND * $BUDGETINCREASE + 1" | bc)

@@ -91,19 +91,9 @@ export class AwsBudgetsMultiaccountStack extends cdk.Stack {
               ]}]
         }); 
     }
-
-    // SNS sample subscription
-
-    // new sns.Subscription(this, 'BudgetsTopicSubscription', {
-    //   topic: topic,
-    //   endpoint: 'YOUR_EMAIL_ADDRESS',
-    //   protocol: sns.SubscriptionProtocol.EMAIL
-    // });
-
     //Cloudformation output for the SNS topic
     new cdk.CfnOutput(this, 'BudgetsTopicArn', {
       value: topic.topicArn
     });
-
   }
 }

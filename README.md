@@ -7,7 +7,7 @@ This sample application allows customers using AWS Organizations with multiple l
 Clone the repo locally and install dependencies:
 
 ```bash
-git clone https://github.com/flabat/aws-budgets-multiaccount.git
+git clone REPO_URL
 cd aws-budgets-multiaccount
 npm install
 ```
